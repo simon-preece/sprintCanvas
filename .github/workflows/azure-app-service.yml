@@ -1,0 +1,35 @@
+name: Azure App Service CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore sprintCanvas/sprintCanvas.csproj
+
+      - name: Build Blazor app
+        run: dotnet build sprintCanvas/sprintCanvas.csproj -c Release --no-restore
+
+      - name: Publish Blazor app
+        run: dotnet publish sprintCanvas/sprintCanvas.csproj -c Release -o publish --no-build
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v4
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: publish

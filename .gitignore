@@ -1,0 +1,47 @@
+# Build results
+bin/
+obj/
+publish/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Visual Studio
+.vs/
+*.suo
+*.sln.docstates
+
+# User-specific files
+*.rsuser
+*.user
+*.userosscache
+*.sln.user
+
+# ReSharper
+.idea/
+*.sln.iml
+_ReSharper*/
+
+# dotnet
+.dotnet/
+.nuget/
+
+# Local app settings
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
