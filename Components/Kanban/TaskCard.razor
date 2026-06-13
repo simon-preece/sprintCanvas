@@ -1,0 +1,40 @@
+@using sprintCanvas.Models
+
+<div class="card mb-2">
+    <div class="card-body p-2">
+        <div class="d-flex justify-content-between">
+            <strong>@Task.Title</strong>
+            <div>
+                <button class="btn btn-sm btn-outline-secondary me-1" @onclick="MoveLeft">◀</button>
+                <button class="btn btn-sm btn-outline-secondary me-1" @onclick="MoveRight">▶</button>
+                <button class="btn btn-sm btn-outline-danger" @onclick="Delete">✖</button>
+            </div>
+        </div>
+        @if (!string.IsNullOrWhiteSpace(Task.Description))
+        {
+            <div class="small text-muted">@Task.Description</div>
+        }
+        @if (!string.IsNullOrWhiteSpace(Task.Tags))
+        {
+            <div class="mt-1"><span class="badge bg-secondary">@Task.Tags</span></div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public SprintTask Task { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<int> OnMoveLeft { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnMoveRight { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDelete { get; set; }
+
+    private Task MoveLeft() => OnMoveLeft.InvokeAsync(Task.Id);
+    private Task MoveRight() => OnMoveRight.InvokeAsync(Task.Id);
+    private Task Delete() => OnDelete.InvokeAsync(Task.Id);
+}

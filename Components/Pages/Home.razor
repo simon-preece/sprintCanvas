@@ -1,7 +1,29 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Dashboard</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Dashboard</h1>
 
-Welcome to your new app.
+<p class="lead">Welcome to sprintCanvas.</p>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="card mb-3">
+			<div class="card-body">
+				<h5 class="card-title">Quick Actions</h5>
+				<p>
+					<a class="btn btn-primary me-2" href="/kanban">Open Kanban</a>
+					<a class="btn btn-outline-secondary" href="/">Other</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="card mb-3">
+			<div class="card-body">
+				<h5 class="card-title">Stats</h5>
+				<p class="card-text text-muted">No data yet — start by creating tasks on the Kanban board.</p>
+			</div>
+		</div>
+	</div>
+</div>

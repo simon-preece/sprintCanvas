@@ -1,0 +1,61 @@
+@using sprintCanvas.Models
+@inject sprintCanvas.Services.TaskService TaskService
+
+<div class="col">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>@ColumnModel.Name</span>
+            <button class="btn btn-sm btn-primary" @onclick="AddNew">+ Task</button>
+        </div>
+        <div class="card-body">
+            @if (Tasks?.Any() != true)
+            {
+                <div class="text-muted">No tasks</div>
+            }
+            else
+            {
+                foreach (var t in Tasks.OrderBy(t => t.Order))
+                {
+                    <TaskCard Task="t" OnMoveLeft="HandleMoveLeft" OnMoveRight="HandleMoveRight" OnDelete="HandleDelete" />
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public BoardColumn ColumnModel { get; set; } = default!;
+
+    [Parameter]
+    public List<SprintTask>? Tasks { get; set; }
+
+    [Parameter]
+    public EventCallback<(int taskId, int targetColumnId)> OnMove { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDeleteTask { get; set; }
+
+    private async Task AddNew()
+    {
+        var t = new SprintTask { Title = "New task", ColumnId = ColumnModel.Id, BoardId = ColumnModel.BoardId };
+        await TaskService.CreateTaskAsync(t);
+        // Notify parent to refresh
+        await OnMove.InvokeAsync((t.Id, ColumnModel.Id));
+    }
+
+    private async Task HandleMoveLeft(int taskId)
+    {
+        await OnMove.InvokeAsync((taskId, ColumnModel.Id - 1));
+    }
+
+    private async Task HandleMoveRight(int taskId)
+    {
+        await OnMove.InvokeAsync((taskId, ColumnModel.Id + 1));
+    }
+
+    private async Task HandleDelete(int taskId)
+    {
+        await OnDeleteTask.InvokeAsync(taskId);
+    }
+}

@@ -1,10 +1,20 @@
+using Microsoft.EntityFrameworkCore;
 using sprintCanvas.Components;
+using sprintCanvas.Data;
+using sprintCanvas.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// Register EF Core DbContext for Kanban
+builder.Services.AddDbContext<KanbanDbContext>(options =>
+    options.UseSqlite("Data Source=kanban.db"));
+
+// Register application services
+builder.Services.AddScoped<TaskService>();
 
 var app = builder.Build();
 

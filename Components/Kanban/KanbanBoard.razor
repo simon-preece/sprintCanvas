@@ -1,0 +1,44 @@
+@using sprintCanvas.Models
+@inject sprintCanvas.Services.TaskService TaskService
+
+<div class="container-fluid">
+    <div class="row">
+        @if (Board == null)
+        {
+            <div>Loading...</div>
+        }
+        else
+        {
+            foreach (var col in Board.Columns.OrderBy(c => c.Order))
+            {
+                <div class="col-4">
+                    <Column ColumnModel="col" Tasks="Board.Tasks?.Where(t => t.ColumnId == col.Id).ToList()" OnMove="HandleMove" OnDeleteTask="HandleDelete" />
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    private Board? Board;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Board = await TaskService.GetBoardAsync();
+    }
+
+    private async Task HandleMove((int taskId, int targetColumnId) args)
+    {
+        var (taskId, targetColumnId) = args;
+        await TaskService.MoveTaskAsync(taskId, targetColumnId);
+        Board = await TaskService.GetBoardAsync(Board?.Id ?? 1);
+        StateHasChanged();
+    }
+
+    private async Task HandleDelete(int taskId)
+    {
+        await TaskService.DeleteTaskAsync(taskId);
+        Board = await TaskService.GetBoardAsync(Board?.Id ?? 1);
+        StateHasChanged();
+    }
+}
